@@ -8,6 +8,7 @@
 #include <time.h>
 #include <algorithm>
 #include <chrono>
+#include <fstream>
 
 using namespace std;
 
@@ -144,29 +145,18 @@ private:
 	// return ID of nearest center (uses euclidean distance)
 	int getIDNearestCenter(Point point)
 	{
-		double sum = 0.0, min_dist;
+		double min_dist = 9999999.0;
 		int id_cluster_center = 0;
-
-		for(int i = 0; i < total_values; i++)
-		{
-			sum += pow(clusters[0].getCentralValue(i) -
-					   point.getValue(i), 2.0);
-		}
-
-		min_dist = sqrt(sum);
 
 		for(int i = 1; i < K; i++)
 		{
-			double dist;
-			sum = 0.0;
-
+			double sum = 0.0;
+			double dist = 0.0;
 			for(int j = 0; j < total_values; j++)
 			{
-				sum += pow(clusters[i].getCentralValue(j) -
-						   point.getValue(j), 2.0);
+				sum = clusters[i].getCentralValue(j) - point.getValue(j);
+                dist += sum * sum;
 			}
-
-			dist = sqrt(sum);
 
 			if(dist < min_dist)
 			{
@@ -298,6 +288,15 @@ public:
 
             cout << "TIME PHASE 2 = "<<std::chrono::duration_cast<std::chrono::microseconds>(end-end_phase1).count()<<"\n";
 		}
+	ofstream outfile("ouput.txt", std::ios::app);
+	if (outfile.is_open()) {
+		outfile << "TOTAL EXECUTION TIME = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "\n";
+		outfile << "TIME PHASE 1 = " << std::chrono::duration_cast<std::chrono::microseconds>(end_phase1 - begin).count() << "\n";
+		outfile << "TIME PHASE 2 = " << std::chrono::duration_cast<std::chrono::microseconds>(end - end_phase1).count() << "\n";
+		outfile.close();
+	} else {
+		cerr << "Unable to open file";
+	}
 	}
 };
 
@@ -326,13 +325,11 @@ int main(int argc, char *argv[])
 		if(has_name)
 		{
 			cin >> point_name;
-			Point p(i, values, point_name);
-			points.push_back(p);
+			points.emplace_back(i, values, point_name);
 		}
 		else
 		{
-			Point p(i, values);
-			points.push_back(p);
+			points.emplace_back(i, values);
 		}
 	}
 
