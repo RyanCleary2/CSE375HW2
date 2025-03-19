@@ -301,6 +301,7 @@ public:
 		}
 		ofstream outfile("ouput.txt", std::ios::app);
 			if (outfile.is_open()) {
+				outfile << "Break in iteration " << iter << "\n";
 				outfile << "TOTAL EXECUTION TIME = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "\n";
 				outfile << "TIME PHASE 1 = " << std::chrono::duration_cast<std::chrono::microseconds>(end_phase1 - begin).count() << "\n";
 				outfile << "TIME PHASE 2 = " << std::chrono::duration_cast<std::chrono::microseconds>(end - end_phase1).count() << "\n";

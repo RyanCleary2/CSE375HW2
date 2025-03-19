@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -O3 -Wall -ltbb
+CXXFLAGS = -DTBB_PREVIEW_GLOBAL_CONTROL -std=c++14 -O3 -Wall -ltbb
 TARGET = parallelkmeans
 SRCS = kmeans-parallel.cpp
 OBJS = $(SRCS:.cpp=.o)
